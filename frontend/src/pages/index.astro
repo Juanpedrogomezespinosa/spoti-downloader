@@ -1,17 +1,139 @@
 ---
-
+import Downloader from '../components/react/downloads/Downloader.tsx';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Spotify Downloader - Save Your Music Offline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Spline Sans', sans-serif; }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(11, 218, 80, 0.15), transparent),
+                        radial-gradient(circle at bottom left, rgba(11, 218, 80, 0.1), transparent);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased font-display">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        <header class="sticky top-0 z-50 w-full border-b border-primary/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 md:px-20 lg:px-40 py-4">
+            <div class="flex items-center justify-between max-w-[1200px] mx-auto">
+                <div class="flex items-center gap-3 text-primary">
+                    <span class="material-symbols-outlined text-3xl font-bold">album</span>
+                    <h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold tracking-tight">SpotifyDown</h2>
+                </div>
+                <nav class="hidden md:flex items-center gap-10">
+                    <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#features">Features</a>
+                    <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#how-it-works">How It Works</a>
+                    <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#faq">FAQ</a>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <button class="hidden sm:block text-slate-600 dark:text-slate-300 text-sm font-bold px-4 py-2">Login</button>
+                    <button class="bg-primary text-background-dark px-6 py-2 rounded-lg text-sm font-bold tracking-wide hover:brightness-110 transition-all shadow-[0_0_20px_rgba(11,218,80,0.3)]">
+                        Get Premium
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1">
+            <section class="relative px-6 py-20 md:py-32 hero-gradient overflow-hidden">
+                <div class="max-w-[960px] mx-auto text-center flex flex-col items-center gap-8">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-4">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        </span>
+                        New: High Fidelity 320kbps Support
+                    </div>
+                    <h1 class="text-slate-900 dark:text-slate-100 text-5xl md:text-7xl font-black leading-tight tracking-tight max-w-4xl">
+                        Download your <span class="text-primary">Spotify</span> world.
+                    </h1>
+                    <p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl font-normal max-w-2xl">
+                        Convert your favorite playlists, albums, and tracks into high-quality MP3s instantly. No software installation required.
+                    </p>
+
+                    <Downloader client:load />
+
+                </div>
+                <div class="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+                <div class="absolute bottom-0 right-0 translate-x-1/4 w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+            </section>
+
+            <section class="py-24 px-6 md:px-20 lg:px-40 bg-slate-50 dark:bg-background-dark/50" id="how-it-works">
+                <div class="max-w-[1200px] mx-auto">
+                    <div class="flex flex-col gap-4 text-center mb-16">
+                        <h2 class="text-slate-900 dark:text-slate-100 text-3xl md:text-5xl font-bold tracking-tight">Take your music anywhere</h2>
+                        <p class="text-slate-600 dark:text-slate-400 text-lg">Three simple steps to enjoy your library offline on any device.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="group relative p-8 rounded-2xl bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-primary/10 hover:border-primary/30 transition-all duration-300">
+                            <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">content_paste</span>
+                            </div>
+                            <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-3">1. Paste link</h3>
+                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Go to Spotify, copy the link to any song, album or playlist and paste it into our search bar.
+                            </p>
+                            <span class="absolute top-4 right-8 text-6xl font-black text-primary/5 select-none">01</span>
+                        </div>
+                        <div class="group relative p-8 rounded-2xl bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-primary/10 hover:border-primary/30 transition-all duration-300">
+                            <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">tune</span>
+                            </div>
+                            <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-3">2. Choose quality</h3>
+                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Select your preferred output format and bitrate, from standard MP3 to high-fidelity 320kbps audio.
+                            </p>
+                            <span class="absolute top-4 right-8 text-6xl font-black text-primary/5 select-none">02</span>
+                        </div>
+                        <div class="group relative p-8 rounded-2xl bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-primary/10 hover:border-primary/30 transition-all duration-300">
+                            <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">download_done</span>
+                            </div>
+                            <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-3">3. Download</h3>
+                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Our servers process the conversion in seconds. Hit download and your files are ready for any player.
+                            </p>
+                            <span class="absolute top-4 right-8 text-6xl font-black text-primary/5 select-none">03</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-slate-100 dark:bg-background-dark px-6 py-16 border-t border-slate-200 dark:border-primary/5">
+            <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-3 text-primary mb-6">
+                        <span class="material-symbols-outlined text-3xl font-bold">album</span>
+                        <h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold tracking-tight">SpotifyDown</h2>
+                    </div>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                        The world's fastest and most reliable Spotify to MP3 converter. High quality audio, free for everyone.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-slate-900 dark:text-slate-100 font-bold mb-6">Product</h4>
+                    <ul class="space-y-4">
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Downloader</a></li>
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Playlist Converter</a></li>
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">MP3 Quality Guide</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-slate-900 dark:text-slate-100 font-bold mb-6">Company</h4>
+                    <ul class="space-y-4">
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">About Us</a></li>
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Privacy Policy</a></li>
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm" href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
 </html>
