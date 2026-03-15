@@ -10,8 +10,7 @@ export default function Downloader() {
   const handleDownload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validación corregida para enlaces reales de Spotify
-    if (!url.includes("spotify.com")) {
+    if (!url.toLowerCase().includes("spotify")) {
       setStatus("error");
       setMessage("Por favor, introduce un enlace válido de Spotify.");
       return;
@@ -19,7 +18,7 @@ export default function Downloader() {
 
     setStatus("loading");
     setMessage(
-      "Magia en proceso: Leyendo Spotify y descargando en el servidor. Esto puede tardar unos minutos...",
+      "Magia en proceso: Descargando y convirtiendo a MP3. (Una playlist entera puede tardar varios minutos...)",
     );
 
     try {
@@ -30,27 +29,39 @@ export default function Downloader() {
       });
 
       if (response.ok) {
+        // Obtenemos el nombre real de la playlist/álbum/canción que nos manda Python
+        const customFilename = response.headers.get("X-Filename");
+        const finalFilename = customFilename
+          ? decodeURIComponent(customFilename)
+          : "descarga.zip";
+
         const blob = await response.blob();
         const downloadUrl = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = downloadUrl;
-        link.download = "playlist_descargada.zip";
+
+        // Asignamos el nombre correcto al archivo que bajará el usuario
+        link.download = finalFilename;
+
         document.body.appendChild(link);
         link.click();
         link.remove();
 
+        // Limpiamos memoria
+        window.URL.revokeObjectURL(downloadUrl);
+
         setStatus("success");
-        setMessage(`¡Éxito! Tu música se ha descargado.`);
+        setMessage(`¡Éxito! Tu archivo "${finalFilename}" se ha descargado.`);
       } else {
         const errorData = await response.json();
         setStatus("error");
-        setMessage(errorData.detail || "Ocurrió un error al descargar.");
+        setMessage(
+          errorData.detail || "Ocurrió un error en el servidor al descargar.",
+        );
       }
     } catch (error) {
       setStatus("error");
-      setMessage(
-        "Error de conexión con el servidor. ¿Está encendido el backend?",
-      );
+      setMessage("Error de conexión. ¿Está encendido el servidor Python?");
     }
   };
 
@@ -58,24 +69,65 @@ export default function Downloader() {
     setUrl(e.target.value);
   };
 
+  const handlePaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setUrl(text);
+    } catch (err) {
+      console.error("No se pudo leer el portapapeles", err);
+    }
+  };
+
+  const handleClear = () => {
+    setUrl("");
+    setStatus("idle");
+    setMessage("");
+  };
+
   return (
     <div className="w-full max-w-2xl mt-8 mx-auto text-left z-20 relative">
       <form onSubmit={handleDownload} className="relative group">
         <div className="absolute -inset-1 bg-primary/20 rounded-xl blur opacity-25 group-focus-within:opacity-100 transition duration-1000 group-focus-within:duration-200"></div>
         <div className="relative flex flex-col sm:flex-row items-stretch gap-2 bg-white dark:bg-slate-800/50 p-2 rounded-xl border border-slate-200 dark:border-slate-700 backdrop-blur shadow-2xl">
-          <div className="flex flex-1 items-center px-4 gap-3">
+          <div className="flex flex-1 items-center px-4 gap-2 relative">
             <span className="material-symbols-outlined text-slate-400">
               link
             </span>
             <input
               type="url"
-              placeholder="Paste Spotify track or playlist URL here..."
+              placeholder="Pega aquí el enlace de Spotify..."
               value={url}
               onChange={handleInputChange}
-              className="w-full bg-transparent border-none outline-none focus:ring-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 text-lg py-3"
+              className="w-full bg-transparent border-none outline-none focus:ring-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 text-lg py-3 pr-20"
               required
             />
+
+            <div className="absolute right-2 flex items-center gap-1">
+              {url && (
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="p-2 flex items-center justify-center text-slate-400 hover:text-red-400 transition-colors rounded-full hover:bg-slate-700/50"
+                  title="Borrar texto"
+                >
+                  <span className="material-symbols-outlined text-[20px]">
+                    close
+                  </span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handlePaste}
+                className="p-2 flex items-center justify-center text-slate-400 hover:text-primary transition-colors rounded-full hover:bg-slate-700/50"
+                title="Pegar desde el portapapeles"
+              >
+                <span className="material-symbols-outlined text-[20px]">
+                  content_paste
+                </span>
+              </button>
+            </div>
           </div>
+
           <button
             type="submit"
             disabled={status === "loading"}
@@ -86,7 +138,7 @@ export default function Downloader() {
             >
               {status === "loading" ? "sync" : "download"}
             </span>
-            {status === "loading" ? "Processing" : "Download"}
+            {status === "loading" ? "Procesando" : "Descargar"}
           </button>
         </div>
       </form>
@@ -106,7 +158,7 @@ export default function Downloader() {
       )}
 
       <p className="mt-4 text-slate-500 dark:text-slate-500 text-sm text-center">
-        Supports Tracks, Playlists, and Albums. Over 2M songs converted daily.
+        Soporta canciones individuales, álbumes y playlists.
       </p>
     </div>
   );

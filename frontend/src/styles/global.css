@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #0bda50;
+  --color-background-light: #f5f8f6;
+  --color-background-dark: #102216;
+  --font-display: "Spline Sans", sans-serif;
+}
+
+body {
+  font-family: "Spline Sans", sans-serif;
+}
+
+.hero-gradient {
+  background:
+    radial-gradient(circle at top right, rgba(11, 218, 80, 0.15), transparent),
+    radial-gradient(circle at bottom left, rgba(11, 218, 80, 0.1), transparent);
+}

@@ -1,16 +1,20 @@
-# backend/src/youtube_handler.py
 import yt_dlp
 import os
 
 def descargar_cancion(busqueda: str, carpeta_destino: str):
     """
-    Busca el texto en YouTube y descarga el mejor audio disponible.
+    Busca el texto en YouTube y descarga el audio en MP3.
     """
-    # El prefijo ytsearch1: le dice que busque y se quede con el 1º resultado
     consulta = f"ytsearch1:{busqueda}"
     
     ydl_opts = {
-        'format': 'm4a/bestaudio/best', # Formato seguro sin necesidad de conversores extra
+        'format': 'bestaudio/best',
+        # Esta es la magia para pasarlo a MP3
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
         'outtmpl': os.path.join(carpeta_destino, '%(title)s.%(ext)s'),
         'quiet': False,
         'nocheckcertificate': True
